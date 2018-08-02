@@ -1,4 +1,4 @@
-#include "wav.hpp"
+#include <wav.h>
 
 #include <cmath>
 
