@@ -41,6 +41,7 @@ namespace audio {
   
   struct s16PCMFrame {
     i16 data[2048];
+    //0-L 1-R 2-L 3-R
     i32 offset;
     inline i16 getLeftSoundTrackAt(i32 i) {return data[i * 2];}
     inline i16 getRightSoundTrackAt(i32 i) {return data[i * 2 + 1];}
