@@ -11,3 +11,7 @@ void sin_cos(audio::s16PCMFrame *frame) {
   }
   ++loop;
 };
+
+void cut(audio::s16PCMFrame *frame, int from, int to) {
+
+}

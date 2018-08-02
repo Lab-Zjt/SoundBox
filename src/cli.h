@@ -13,6 +13,7 @@ public:
   void ShowHomePage();
   void NoSuchOptionError();
   void SoundEffectsTransform();
+  void Cut();
   void Wait();
   int GetOption();
   std::string GetString();

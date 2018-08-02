@@ -7,5 +7,6 @@ namespace audio {
 //function format:
 typedef void (*transform_func_t)(audio::s16PCMFrame *);
 void sin_cos(audio::s16PCMFrame *);
+void cut(audio::s16PCMFrame *, int, int);
 
 #endif

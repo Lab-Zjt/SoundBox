@@ -166,6 +166,11 @@ namespace audio {
       write(fd, data, filesize);
       close(fd);
     }
+    void setFileSize(i64 size) {
+      filesize = size;
+      header.size = filesize - 8;
+    }
+    u8 *getData() {return data;}
   };
   
   double getSin(double off, int cycle);
