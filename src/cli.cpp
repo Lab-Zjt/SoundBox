@@ -81,6 +81,7 @@ void CommandLineInterface::StartLoop() {
       }
       case 2: {
         CommandLine.Cut();
+        break;
       }
       default: {
         CommandLine.NoSuchOptionError();
