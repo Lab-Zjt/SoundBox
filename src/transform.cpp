@@ -52,3 +52,27 @@ void SoundCut(const std::string &input, const std::string &output, int from, int
   cout << "Success!" << endl;
   remove(tmp_file.c_str());
 }
+void SoundMerge(const string &input1, const string &input2, const string &output) {
+  const string ffmpeg("ffmpeg -i ");
+  const string tmp_file1("tmpweasdfw.wav");
+  const string tmp_file2("tmpwaefwcd.wav");
+  fclose(stderr);
+  cout << "Decoding..." << endl;
+  auto cmd = ffmpeg + input1 + ' ' + tmp_file1;
+  system(cmd.c_str());
+  cmd = ffmpeg + input2 + ' ' + tmp_file2;
+  system(cmd.c_str());
+  cout << "Merging..." << endl;
+  audio::wavReader i1(tmp_file1.c_str());
+  i1.wavParse();
+  audio::wavReader i2(tmp_file2.c_str());
+  i2.wavParse();
+  auto o = i1 + i2;
+  o.writeToFile(tmp_file1.c_str());
+  cout << "Encoding..." << endl;
+  cmd = ffmpeg + tmp_file1 + ' ' + output;
+  system(cmd.c_str());
+  remove(tmp_file1.c_str());
+  remove(tmp_file2.c_str());
+  cout << "Success!" << endl;
+}

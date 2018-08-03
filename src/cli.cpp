@@ -17,6 +17,7 @@ void CommandLineInterface::ShowHomePage() {
   printf("Welcome to Use WavParser!\n"
          "\t1. Sound Effects Transform\n"
          "\t2. Cut\n"
+         "\t3. Merge\n"
          "Please Enter Your Choice:");
 }
 void CommandLineInterface::Wait() {
@@ -70,6 +71,18 @@ void CommandLineInterface::SoundEffectsTransform() {
     }
   }
 }
+void CommandLineInterface::Merge() {
+  CommandLine.Clean();
+  printf("Merge:\n"
+         "Input File1:");
+  auto input1 = CommandLine.GetString();
+  printf("Input File2:");
+  auto input2 = CommandLine.GetString();
+  printf("Output File:");
+  auto output = CommandLine.GetString();
+  SoundMerge(input1, input2, output);
+  CommandLine.Wait();
+}
 void CommandLineInterface::StartLoop() {
   while (true) {
     CommandLine.ShowHomePage();
@@ -81,6 +94,10 @@ void CommandLineInterface::StartLoop() {
       }
       case 2: {
         CommandLine.Cut();
+        break;
+      }
+      case 3: {
+        CommandLine.Merge();
         break;
       }
       default: {

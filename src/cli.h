@@ -14,6 +14,7 @@ public:
   void NoSuchOptionError();
   void SoundEffectsTransform();
   void Cut();
+  void Merge();
   void Wait();
   int GetOption();
   std::string GetString();

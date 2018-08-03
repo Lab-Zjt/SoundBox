@@ -59,10 +59,14 @@ namespace audio {
     i64 offset;
     u8 *data;
     wavHeader header;
+    i64 headeroff;
     wavFormatChunk format;
+    i64 formatoff;
     wavDataChunk metadata;
+    i64 metadataoff;
     i64 filesize;
   public:
+    wavReader() = default;
     explicit wavReader(const char *filepath) {
       int fd = ::open(filepath, O_RDONLY);
       if (fd < 0) {
@@ -93,6 +97,7 @@ namespace audio {
     void wavParse() {
       //Get header frame
       memmove(&header, data + offset, sizeof(header));
+      headeroff = offset;
       offset += sizeof(header);
       //Get format frame
       for (;;) {
@@ -104,6 +109,7 @@ namespace audio {
         }
       }
       memmove(&format, data + offset, sizeof(format));
+      formatoff = offset;
       offset += sizeof(format);
       //Get data frame
       for (;;) {
@@ -115,6 +121,7 @@ namespace audio {
         }
       }
       memmove(&metadata, data + offset, sizeof(metadata) - sizeof(metadata.dataOffset));
+      metadataoff = offset;
       offset += sizeof(metadata) - sizeof(metadata.dataOffset);
       metadata.dataOffset = offset;
     }
@@ -162,6 +169,9 @@ namespace audio {
       memmove(data + src->offset, src, sizeof(u8PCMFrame) - sizeof(src->offset));
     }
     void writeToFile(const char *filepath) {
+      memmove(data + headeroff, &header, sizeof(header));
+      memmove(data + formatoff, &format, sizeof(format));
+      memmove(data + metadataoff, &metadata, sizeof(metadata) - sizeof(i32));
       int fd = open(filepath, O_CREAT | O_TRUNC | O_WRONLY, 0666);
       write(fd, data, filesize);
       close(fd);
@@ -169,8 +179,29 @@ namespace audio {
     void setFileSize(i64 size) {
       filesize = size;
       header.size = filesize - 8;
+      metadata.size = filesize - metadata.dataOffset;
     }
     u8 *getData() {return data;}
+    wavReader operator+(const wavReader &rhs) {
+      wavReader res;
+      if (format.byteRate == rhs.format.byteRate && format.sampleRate == rhs.format.sampleRate &&
+          format.channelNum == rhs.format.channelNum) {
+        res.header = header;
+        res.headeroff = headeroff;
+        res.format = format;
+        res.formatoff = formatoff;
+        res.metadataoff = metadataoff;
+        res.metadata = metadata;
+        res.offset = 0;
+        res.data = new u8[filesize + rhs.metadata.size];
+        memmove(res.data, data, filesize);
+        memmove(res.data + filesize, rhs.data + rhs.metadata.dataOffset, rhs.metadata.size);
+        res.filesize = filesize + rhs.metadata.size;
+        res.header.size = res.filesize - 8;
+        res.metadata.size = res.filesize - metadata.dataOffset;
+      }
+      return res;
+    }
   };
   
   double getSin(double off, int cycle);
