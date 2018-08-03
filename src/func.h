@@ -11,4 +11,8 @@ void bit8(audio::s16PCMFrame *);
 void leftBlock(audio::s16PCMFrame *);
 void rightBlock(audio::s16PCMFrame *);
 void depart(audio::s16PCMFrame *);
+void roate(audio::s16PCMFrame *);
+void dumb(audio::s16PCMFrame *);
+void volume_adjust(audio::s16PCMFrame *frame, double left_adjust, double right_adjust);
+void sound_mix(audio::s16PCMFrame *frame, audio::s16PCMFrame *another_frame);
 #endif
