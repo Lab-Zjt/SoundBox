@@ -16,6 +16,7 @@ public:
   void Cut();
   void Merge();
   void Wait();
+  void Depart();
   int GetOption();
   std::string GetString();
   void StartLoop();

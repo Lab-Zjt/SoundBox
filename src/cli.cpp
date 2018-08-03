@@ -18,6 +18,7 @@ void CommandLineInterface::ShowHomePage() {
          "\t1. Sound Effects Transform\n"
          "\t2. Cut\n"
          "\t3. Merge\n"
+         "\t4. Depart\n"
          "Please Enter Your Choice:");
 }
 void CommandLineInterface::Wait() {
@@ -99,6 +100,19 @@ void CommandLineInterface::SoundEffectsTransform() {
     }
   }
 }
+void CommandLineInterface::Depart() {
+  CommandLine.Clean();
+  printf("Depart:\n"
+         "Input File:");
+  auto input = CommandLine.GetString();
+  printf("Left Sound Track Output File:");
+  auto left = CommandLine.GetString();
+  printf("Right Sound Track Output File:");
+  auto right = CommandLine.GetString();
+  SoundDepart(input, left, right);
+  printf("Press Enter to Continue.\n");
+  CommandLine.Wait();
+}
 void CommandLineInterface::Merge() {
   CommandLine.Clean();
   printf("Merge:\n"
@@ -109,6 +123,7 @@ void CommandLineInterface::Merge() {
   printf("Output File:");
   auto output = CommandLine.GetString();
   SoundMerge(input1, input2, output);
+  printf("Press Enter to Continue.\n");
   CommandLine.Wait();
 }
 void CommandLineInterface::StartLoop() {
@@ -126,6 +141,10 @@ void CommandLineInterface::StartLoop() {
       }
       case 3: {
         CommandLine.Merge();
+        break;
+      }
+      case 4: {
+        CommandLine.Depart();
         break;
       }
       default: {

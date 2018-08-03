@@ -76,3 +76,34 @@ void SoundMerge(const string &input1, const string &input2, const string &output
   remove(tmp_file2.c_str());
   cout << "Success!" << endl;
 }
+void SoundDepart(const std::string &input, const std::string &left, const std::string &right) {
+  const string ffmpeg("ffmpeg -i ");
+  const string tmp_file("sdafwe.wav");
+  const string tmp_file_1("safewfwefe.wav");
+  auto cmd = ffmpeg + input + ' ' + tmp_file;
+  cout << "Decoding..." << endl;
+  system(cmd.c_str());
+  cout << "Departing..." << endl;
+  audio::wavReader reader(tmp_file.c_str());
+  audio::wavReader reader1(reader);
+  reader.wavParse();
+  reader1.wavParse();
+  while (!reader.isEnd()) {
+    auto frame = reader.readDataFrame16();
+    auto frame1 = reader1.readDataFrame16();
+    rightBlock(frame);
+    leftBlock(frame1);
+    reader.writeDataFrame16(frame);
+    reader1.writeDataFrame16(frame1);
+    delete frame;
+    delete frame1;
+  }
+  reader.writeToFile(tmp_file.c_str());
+  reader1.writeToFile(tmp_file_1.c_str());
+  cout << "Encoding..." << endl;
+  cmd = ffmpeg + tmp_file + ' ' + left;
+  system(cmd.c_str());
+  cmd = ffmpeg + tmp_file_1 + ' ' + right;
+  system(cmd.c_str());
+  cout << "Success!" << endl;
+}

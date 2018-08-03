@@ -202,6 +202,12 @@ namespace audio {
       }
       return res;
     }
+    wavReader(const wavReader &old) {
+      data = new u8[old.filesize];
+      offset = 0;
+      filesize = old.filesize;
+      memmove(data, old.data, old.filesize);
+    }
   };
   
   double getSin(double off, int cycle);
