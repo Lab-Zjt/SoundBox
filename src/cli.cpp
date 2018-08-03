@@ -51,16 +51,44 @@ void CommandLineInterface::SoundEffectsTransform() {
   CommandLine.Clean();
   printf("Sound Effects Transform:\n"
          "\t1. Sin-Cos\n"
+         "\t2. 8bit-style\n"
+         "\t3. Block Left Sound Track\n"
+         "\t4. Block Right Sound Track\n"
+         "\t5. Depart\n"
          "Please Enter Your Choice:");
   auto op = CommandLine.GetOption();
+  printf("Input File:");
+  auto input = CommandLine.GetString();
+  printf("Output File:");
+  auto output = CommandLine.GetString();
   switch (op) {
     case 1: {
       //CommandLine.Clean();
-      printf("Input File:");
-      auto input = CommandLine.GetString();
-      printf("Output File:");
-      auto output = CommandLine.GetString();
-      SoundEffectsTransform1(input, output);
+      SoundEffectsTransform1(input, output, sin_cos);
+      printf("Press Enter to Continue.");
+      CommandLine.Wait();
+      break;
+    }
+    case 2: {
+      SoundEffectsTransform1(input, output, bit8);
+      printf("Press Enter to Continue.");
+      CommandLine.Wait();
+      break;
+    }
+    case 3: {
+      SoundEffectsTransform1(input, output, leftBlock);
+      printf("Press Enter to Continue.");
+      CommandLine.Wait();
+      break;
+    }
+    case 4: {
+      SoundEffectsTransform1(input, output, rightBlock);
+      printf("Press Enter to Continue.");
+      CommandLine.Wait();
+      break;
+    }
+    case 5: {
+      SoundEffectsTransform1(input, output, depart);
       printf("Press Enter to Continue.");
       CommandLine.Wait();
       break;

@@ -4,7 +4,7 @@
 #include "func.h"
 
 using namespace std;
-void SoundEffectsTransform1(const std::string &input, const std::string &output) {
+void SoundEffectsTransform1(const std::string &input, const std::string &output, transform_func_t func) {
   const std::string bcmd = "ffmpeg -i ";
   cout << "Decoding..." << endl;
   fclose(stderr);
@@ -17,7 +17,7 @@ void SoundEffectsTransform1(const std::string &input, const std::string &output)
   reader.wavParse();
   while (!reader.isEnd()) {
     auto frame = reader.readDataFrame16();
-    sin_cos(frame);
+    func(frame);
     reader.writeDataFrame16(frame);
     delete frame;
   }
