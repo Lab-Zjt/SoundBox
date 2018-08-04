@@ -7,10 +7,15 @@ CommandLineInterface CommandLine;
 void CommandLineInterface::Clean() {
   printf("\033[H\033[J");
 }
-int CommandLineInterface::GetOption() {
-  std::cin >> _option;
+int CommandLineInterface::ReadInt() {
+  std::cin >> _int;
   getchar();
-  return _option;
+  return _int;
+}
+double CommandLineInterface::ReadDouble() {
+  std::cin >> _double;
+  getchar();
+  return _double;
 }
 void CommandLineInterface::ShowHomePage() {
   CommandLine.Clean();
@@ -19,6 +24,8 @@ void CommandLineInterface::ShowHomePage() {
          "\t2. Cut\n"
          "\t3. Merge\n"
          "\t4. Depart\n"
+         "\t5. Mix 2 Music Files\n"
+         "\t6. Volume Adjust\n"
          "Please Enter Your Choice:");
 }
 void CommandLineInterface::Wait() {
@@ -28,7 +35,7 @@ void CommandLineInterface::NoSuchOptionError() {
   printf("No Such OptionQAQ, Press Enter to Continue.\n");
   CommandLine.Wait();
 }
-std::string CommandLineInterface::GetString() {
+std::string CommandLineInterface::ReadString() {
   std::cin >> _string;
   getchar();
   return _string;
@@ -37,14 +44,28 @@ void CommandLineInterface::Cut() {
   CommandLine.Clean();
   printf("Cut:\n"
          "Input File:");
-  auto input = CommandLine.GetString();
+  auto input = CommandLine.ReadString();
   printf("Output File:");
-  auto output = CommandLine.GetString();
+  auto output = CommandLine.ReadString();
   printf("Time of Begin:");
-  auto begin = CommandLine.GetOption();
+  auto begin = CommandLine.ReadInt();
   printf("Time of End:");
-  auto end = CommandLine.GetOption();
+  auto end = CommandLine.ReadInt();
   SoundCut(input, output, begin, end);
+  printf("Press Enter to Continue.\n");
+  CommandLine.Wait();
+}
+void CommandLineInterface::VolumeAdjust() {
+  printf("Volume Adjust:\n"
+         "Input File:");
+  auto input = CommandLine.ReadString();
+  printf("Output File:");
+  auto output = CommandLine.ReadString();
+  printf("Left Sound Track Adjust Factor:");
+  auto la = CommandLine.ReadDouble();
+  printf("Right Sound Track Adjust Factor:");
+  auto ra = CommandLine.ReadDouble();
+  SoundVolumeAdjust(input, output, la, ra);
   printf("Press Enter to Continue.\n");
   CommandLine.Wait();
 }
@@ -55,13 +76,14 @@ void CommandLineInterface::SoundEffectsTransform() {
          "\t2. 8bit-style\n"
          "\t3. Block Left Sound Track\n"
          "\t4. Block Right Sound Track\n"
-         "\t5. Depart\n"
+         "\t5. Make Sound More Consecutive\n"
+         "\t6. Switch Left and Right Sound Track.\n"
          "Please Enter Your Choice:");
-  auto op = CommandLine.GetOption();
+  auto op = CommandLine.ReadInt();
   printf("Input File:");
-  auto input = CommandLine.GetString();
+  auto input = CommandLine.ReadString();
   printf("Output File:");
-  auto output = CommandLine.GetString();
+  auto output = CommandLine.ReadString();
   switch (op) {
     case 1: {
       //CommandLine.Clean();
@@ -89,7 +111,13 @@ void CommandLineInterface::SoundEffectsTransform() {
       break;
     }
     case 5: {
-      SoundEffectsTransform1(input, output, depart);
+      SoundEffectsTransform1(input, output, consecutive);
+      printf("Press Enter to Continue.");
+      CommandLine.Wait();
+      break;
+    }
+    case 6: {
+      SoundEffectsTransform1(input, output, switch_lr);
       printf("Press Enter to Continue.");
       CommandLine.Wait();
       break;
@@ -104,11 +132,11 @@ void CommandLineInterface::Depart() {
   CommandLine.Clean();
   printf("Depart:\n"
          "Input File:");
-  auto input = CommandLine.GetString();
+  auto input = CommandLine.ReadString();
   printf("Left Sound Track Output File:");
-  auto left = CommandLine.GetString();
+  auto left = CommandLine.ReadString();
   printf("Right Sound Track Output File:");
-  auto right = CommandLine.GetString();
+  auto right = CommandLine.ReadString();
   SoundDepart(input, left, right);
   printf("Press Enter to Continue.\n");
   CommandLine.Wait();
@@ -117,19 +145,32 @@ void CommandLineInterface::Merge() {
   CommandLine.Clean();
   printf("Merge:\n"
          "Input File1:");
-  auto input1 = CommandLine.GetString();
+  auto input1 = CommandLine.ReadString();
   printf("Input File2:");
-  auto input2 = CommandLine.GetString();
+  auto input2 = CommandLine.ReadString();
   printf("Output File:");
-  auto output = CommandLine.GetString();
+  auto output = CommandLine.ReadString();
   SoundMerge(input1, input2, output);
+  printf("Press Enter to Continue.\n");
+  CommandLine.Wait();
+}
+void CommandLineInterface::Mix() {
+  CommandLine.Clean();
+  printf("Mix:\n"
+         "Input File1:");
+  auto input1 = CommandLine.ReadString();
+  printf("Input File2:");
+  auto input2 = CommandLine.ReadString();
+  printf("Output File:");
+  auto output = CommandLine.ReadString();
+  SoundMix(input1, input2, output);
   printf("Press Enter to Continue.\n");
   CommandLine.Wait();
 }
 void CommandLineInterface::StartLoop() {
   while (true) {
     CommandLine.ShowHomePage();
-    auto op = CommandLine.GetOption();
+    auto op = CommandLine.ReadInt();
     switch (op) {
       case 1: {
         CommandLine.SoundEffectsTransform();
@@ -145,6 +186,14 @@ void CommandLineInterface::StartLoop() {
       }
       case 4: {
         CommandLine.Depart();
+        break;
+      }
+      case 5: {
+        CommandLine.Mix();
+        break;
+      }
+      case 7: {
+        CommandLine.VolumeAdjust();
         break;
       }
       default: {

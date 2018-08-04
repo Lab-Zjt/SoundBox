@@ -5,8 +5,9 @@
 
 class CommandLineInterface {
 private:
-  int _option;
+  int _int = 0;
   std::string _string;
+  double _double = 0.0;
 public:
   CommandLineInterface() = default;
   void Clean();
@@ -17,8 +18,11 @@ public:
   void Merge();
   void Wait();
   void Depart();
-  int GetOption();
-  std::string GetString();
+  void Mix();
+  void VolumeAdjust();
+  int ReadInt();
+  double ReadDouble();
+  std::string ReadString();
   void StartLoop();
 };
 

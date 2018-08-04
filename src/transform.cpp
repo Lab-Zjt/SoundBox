@@ -107,3 +107,51 @@ void SoundDepart(const std::string &input, const std::string &left, const std::s
   system(cmd.c_str());
   cout << "Success!" << endl;
 }
+void SoundMix(const std::string &input1, const std::string &input2, const std::string &output) {
+  const string ffmpeg("ffmpeg -i ");
+  const string tmp_file1("teafmpe.wav");
+  const string tmp_file2("teadacvewsvw.wav");
+  auto cmd = ffmpeg + input1 + ' ' + tmp_file1;
+  cout << "Decoding..." << endl;
+  system(cmd.c_str());
+  cmd = ffmpeg + input2 + ' ' + tmp_file2;
+  system(cmd.c_str());
+  cout << "Transforming..." << endl;
+  audio::wavReader r1(tmp_file1.c_str());
+  audio::wavReader r2(tmp_file2.c_str());
+  r1.wavParse();
+  r2.wavParse();
+  while (!r1.isEnd() && !r2.isEnd()) {
+    auto frame1 = r1.readDataFrame16();
+    auto frame2 = r2.readDataFrame16();
+    sound_mix(frame1, frame2);
+    r1.writeDataFrame16(frame1);
+    delete frame1;
+    delete frame2;
+  }
+  r1.writeToFile(tmp_file1.c_str());
+  cmd = ffmpeg + tmp_file1 + ' ' + output;
+  cout << "Encoding..." << endl;
+  system(cmd.c_str());
+  cout << "Success!" << endl;
+}
+void SoundVolumeAdjust(const std::string &input, const std::string &output, double la, double ra) {
+  const string ffmpeg("ffmpeg -i ");
+  const string tmp_file("geioran.wav");
+  auto cmd = ffmpeg + input + ' ' + tmp_file;
+  cout << "Decoding..." << endl;
+  system(cmd.c_str());
+  cout << "Transforming..." << endl;
+  audio::wavReader reader(tmp_file.c_str());
+  while (!reader.isEnd()) {
+    auto frame = reader.readDataFrame16();
+    volume_adjust(frame, la, ra);
+    reader.writeDataFrame16(frame);
+    delete frame;
+  }
+  reader.writeToFile(tmp_file.c_str());
+  cmd = ffmpeg + tmp_file + ' ' + output;
+  cout << "Encoding..." << endl;
+  system(cmd.c_str());
+  cout << "Success!" << endl;
+}
