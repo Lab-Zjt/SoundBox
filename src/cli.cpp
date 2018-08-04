@@ -26,6 +26,7 @@ void CommandLineInterface::ShowHomePage() {
          "\t4. Depart\n"
          "\t5. Mix 2 Music Files\n"
          "\t6. Volume Adjust\n"
+         "\t7. Speed Up\n"
          "Please Enter Your Choice:");
 }
 void CommandLineInterface::Wait() {
@@ -48,9 +49,9 @@ void CommandLineInterface::Cut() {
   printf("Output File:");
   auto output = CommandLine.ReadString();
   printf("Time of Begin:");
-  auto begin = CommandLine.ReadInt();
+  auto begin = CommandLine.ReadDouble();
   printf("Time of End:");
-  auto end = CommandLine.ReadInt();
+  auto end = CommandLine.ReadDouble();
   SoundCut(input, output, begin, end);
   printf("Press Enter to Continue.\n");
   CommandLine.Wait();
@@ -128,6 +129,24 @@ void CommandLineInterface::SoundEffectsTransform() {
     }
   }
 }
+void CommandLineInterface::SoundSpeedUp() {
+  CommandLine.Clean();
+  printf("Sound Speed Up:\n"
+         "Input File:");
+  auto input = CommandLine.ReadString();
+  printf("Output File:");
+  auto output = CommandLine.ReadString();
+  printf("Speed Up Rate(0-7):");
+  auto rate = CommandLine.ReadInt();
+  if (rate < 0 || rate > 7) {
+    printf("Invalid Rate! Press Enter to Continue.\n");
+    CommandLine.Wait();
+    return;
+  }
+  ::SoundSpeedUp(input, output, rate);
+  printf("Press Enter to Continue.\n");
+  CommandLine.Wait();
+}
 void CommandLineInterface::Depart() {
   CommandLine.Clean();
   printf("Depart:\n"
@@ -192,8 +211,12 @@ void CommandLineInterface::StartLoop() {
         CommandLine.Mix();
         break;
       }
-      case 7: {
+      case 6: {
         CommandLine.VolumeAdjust();
+        break;
+      }
+      case 7: {
+        CommandLine.SoundSpeedUp();
         break;
       }
       default: {

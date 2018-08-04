@@ -14,6 +14,7 @@ public:
   void ShowHomePage();
   void NoSuchOptionError();
   void SoundEffectsTransform();
+  void SoundSpeedUp();
   void Cut();
   void Merge();
   void Wait();
