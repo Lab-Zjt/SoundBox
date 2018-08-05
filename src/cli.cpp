@@ -81,10 +81,14 @@ void CommandLineInterface::SoundEffectsTransform() {
          "\t6. Switch Left and Right Sound Track.\n"
          "Please Enter Your Choice:");
   auto op = CommandLine.ReadInt();
-  printf("Input File:");
-  auto input = CommandLine.ReadString();
-  printf("Output File:");
-  auto output = CommandLine.ReadString();
+  std::string input, output;
+  
+  if (op > 0 && op < 7) {
+    printf("Input File:");
+    input = CommandLine.ReadString();
+    printf("Output File:");
+    output = CommandLine.ReadString();
+  }
   switch (op) {
     case 1: {
       //CommandLine.Clean();
