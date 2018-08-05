@@ -78,7 +78,7 @@ namespace audio {
       filesize = st.st_size;
       offset = 0;
       data = new u8[filesize];
-      if (::read(fd, data, filesize) < 0) {
+      if (::read(fd, data, static_cast<size_t >(filesize)) < 0) {
         perror("read");
         exit(-1);
       }
@@ -126,7 +126,7 @@ namespace audio {
       memmove(&metadata, data + offset, sizeof(metadata) - sizeof(metadata.dataOffset));
       metadataoff = offset;
       offset += sizeof(metadata) - sizeof(metadata.dataOffset);
-      metadata.dataOffset = offset;
+      metadata.dataOffset = static_cast<i32>(offset);
     }
     wavHeader getHeader() {
       return header;
@@ -154,8 +154,8 @@ namespace audio {
     }
     void writeDataFrame16(s16PCMFrame *src) {
       std::uint64_t max_size = sizeof(s16PCMFrame) - sizeof(src->offset);
-      if (offset > filesize) {
-        max_size = max_size - (offset - filesize);
+      if (src->offset > filesize) {
+        max_size = max_size - (src->offset - filesize);
       }
       memmove(data + src->offset, src, max_size);
     }

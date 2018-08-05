@@ -6,8 +6,8 @@ void sin_cos(audio::s16PCMFrame *frame) {
   static int loop = 0;
   for (int i = 0; i < 1024; ++i) {
     auto sum = frame->getLeftSoundTrackAt(i) + frame->getRightSoundTrackAt(i);
-    frame->setLeftSoundTrackAt(i, static_cast<int16_t>(std::sin(7 * static_cast<double>(loop) / 512) * sum * 2 / (7 * audio::pi )));
-    frame->setRightSoundTrackAt(i, static_cast<int16_t>(std::cos(7 * static_cast<double>(loop) / 512) * sum * 2/ (7* audio::pi)));
+    frame->setLeftSoundTrackAt(i, static_cast<int16_t>(std::sin(static_cast<double>(loop) / 512) * sum / 2));
+    frame->setRightSoundTrackAt(i, static_cast<int16_t>(std::cos(static_cast<double>(loop) / 512) * sum / 2));
   }
   ++loop;
 };
@@ -35,18 +35,11 @@ void rightBlock(audio::s16PCMFrame *frame) {
     frame->setRightSoundTrackAt(i, 0);
   }
 }
-void depart(audio::s16PCMFrame *frame) {
+void consecutive(audio::s16PCMFrame *frame) {
   auto lf = [](int16_t i) -> int16_t {
     static int16_t prev = 0;
     auto save = i;
-    i = i / 2 + prev / 2;
-    prev = save;
-    return i;
-  };
-  auto rf = [](int16_t i) -> int16_t {
-    static int16_t prev = 0;
-    auto save = i;
-    i = i / 2 + prev / 2;
+    i = static_cast<int16_t >(i / 2 + prev / 2);
     prev = save;
     return i;
   };
@@ -57,7 +50,7 @@ void depart(audio::s16PCMFrame *frame) {
     frame->setRightSoundTrackAt(i, lf(r));
   }
 }
-void dumb(audio::s16PCMFrame *frame) {
+[[gnu::unused]]void dumb(audio::s16PCMFrame *frame) {
   static int loop = 0;
   for (int i = 0; i < 1024; ++i) {
     if (abs(frame->getLeftSoundTrackAt(i)) > INT16_MAX / 5)
@@ -84,10 +77,8 @@ void dumb(audio::s16PCMFrame *frame) {
     frame->setRightSoundTrackAt(i, static_cast<int16_t>(adjust));
   }
 }*/
-void volume_adjust(audio::s16PCMFrame *frame)
+void volume_adjust(audio::s16PCMFrame *frame,double left_adjust,double right_adjust)
 {
-    double left_adjust = 5;
-    double right_adjust = 5;
     double factor = 1;
     for (int i = 0; i < 1024;i++)
     {
@@ -128,7 +119,8 @@ void sound_mix(audio::s16PCMFrame *frame, audio::s16PCMFrame *another_frame) {
   double factor = 1;
   for (int i = 0; i < 1024; i++) {
     int32_t adjust;
-    adjust = static_cast<int32_t>((frame->getLeftSoundTrackAt(i) + another_frame->getLeftSoundTrackAt(i)) * factor);
+    adjust = static_cast<int32_t>((static_cast<int32_t>(frame->getLeftSoundTrackAt(i)) +
+                                   static_cast<int32_t>(another_frame->getLeftSoundTrackAt(i))) * factor);
     if (adjust > INT16_MAX) {
       factor = INT16_MAX / static_cast<double>(adjust);
       adjust = INT16_MAX;
@@ -141,7 +133,8 @@ void sound_mix(audio::s16PCMFrame *frame, audio::s16PCMFrame *another_frame) {
     if (factor < 1)
       factor += (1 - factor) / static_cast<double>(8);
     
-    adjust = static_cast<int32_t>((frame->getRightSoundTrackAt(i) + another_frame->getRightSoundTrackAt(i)) * factor);
+    adjust = static_cast<int32_t>((static_cast<int32_t>(frame->getRightSoundTrackAt(i)) +
+                                   static_cast<int32_t>(another_frame->getRightSoundTrackAt(i))) * factor);
     if (adjust > INT16_MAX) {
       factor = INT16_MAX / static_cast<double>(adjust);
       adjust = INT16_MAX;
@@ -168,7 +161,7 @@ void sound_mix(audio::s16PCMFrame *frame, audio::s16PCMFrame *another_frame) {
     }
 }*/
 
-double average(audio::s16PCMFrame *frame) {
+[[gnu::unused]]double average(audio::s16PCMFrame *frame) {
   double aver = 0;
   for (int i = 0; i < 1024; i++) {
     aver += (abs(frame->getLeftSoundTrackAt(i)) + abs(frame->getRightSoundTrackAt(i))) / static_cast<double>(1024);
@@ -176,7 +169,7 @@ double average(audio::s16PCMFrame *frame) {
   
   return aver;
 }
-void roate(audio::s16PCMFrame *frame) {
+void switch_lr(audio::s16PCMFrame *frame) {
   for (int i = 0; i < 1024; i++) {
     int16_t tem = frame->getLeftSoundTrackAt(i);
     frame->setLeftSoundTrackAt(i, frame->getRightSoundTrackAt(i));
@@ -240,9 +233,4 @@ void get_accompany(audio::s16PCMFrame *frame)
     if (factor < 1)
       factor += (1 - factor) / static_cast<double>(8);
   }
-}
-
-void get_vocal(audio::s16PCMFrame *frame)
-{
-  
 }
