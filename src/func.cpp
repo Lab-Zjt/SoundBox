@@ -60,7 +60,7 @@ void consecutive(audio::s16PCMFrame *frame) {
   }
   ++loop;
 }
-void volume_adjust(audio::s16PCMFrame *frame, double left_adjust, double right_adjust) {
+/*void volume_adjust(audio::s16PCMFrame *frame, double left_adjust, double right_adjust) {
   for (int i = 0; i < 1024; i++) {
     int32_t adjust;
     adjust = static_cast<int32_t>(frame->getLeftSoundTrackAt(i) * left_adjust);
@@ -76,8 +76,8 @@ void volume_adjust(audio::s16PCMFrame *frame, double left_adjust, double right_a
       adjust = INT16_MIN;
     frame->setRightSoundTrackAt(i, static_cast<int16_t>(adjust));
   }
-}
-/*void volume_adjust(audio::s16PCMFrame *frame,double left_adjust,double right_adjust)
+}*/
+void volume_adjust(audio::s16PCMFrame *frame,double left_adjust,double right_adjust)
 {
     double factor = 1;
     for (int i = 0; i < 1024;i++)
@@ -96,7 +96,7 @@ void volume_adjust(audio::s16PCMFrame *frame, double left_adjust, double right_a
         }
         frame->setLeftSoundTrackAt(i,static_cast<int16_t>(adjust));
         if(factor < 1)
-            factor = (1 - factor) / static_cast<double>(8);
+            factor += (1 - factor) / static_cast<double>(8);
            
         adjust = static_cast<int32_t>( frame->getRightSoundTrackAt(i) * right_adjust * factor);
         if(adjust > INT16_MAX)
@@ -111,9 +111,9 @@ void volume_adjust(audio::s16PCMFrame *frame, double left_adjust, double right_a
         }
         frame->setRightSoundTrackAt(i,static_cast<int16_t>(adjust));
         if(factor < 1)
-            factor = (1 - factor) / static_cast<double>(8);
+            factor += (1 - factor) / static_cast<double>(8);
     }
-}*/
+}
 
 void sound_mix(audio::s16PCMFrame *frame, audio::s16PCMFrame *another_frame) {
   double factor = 1;
@@ -131,7 +131,7 @@ void sound_mix(audio::s16PCMFrame *frame, audio::s16PCMFrame *another_frame) {
     }
     frame->setLeftSoundTrackAt(i, static_cast<int16_t>(adjust));
     if (factor < 1)
-      factor = (1 - factor) / static_cast<double>(8);
+      factor += (1 - factor) / static_cast<double>(8);
     
     adjust = static_cast<int32_t>((static_cast<int32_t>(frame->getRightSoundTrackAt(i)) +
                                    static_cast<int32_t>(another_frame->getRightSoundTrackAt(i))) * factor);
@@ -145,7 +145,7 @@ void sound_mix(audio::s16PCMFrame *frame, audio::s16PCMFrame *another_frame) {
     }
     frame->setRightSoundTrackAt(i, static_cast<int16_t>(adjust));
     if (factor < 1)
-      factor = (1 - factor) / static_cast<double>(8);
+      factor += (1 - factor) / static_cast<double>(8);
   }
 }
 /*void sound_mix(audio::s16PCMFrame *frame ,audio::s16PCMFrame *another_frame)
@@ -174,5 +174,63 @@ void switch_lr(audio::s16PCMFrame *frame) {
     int16_t tem = frame->getLeftSoundTrackAt(i);
     frame->setLeftSoundTrackAt(i, frame->getRightSoundTrackAt(i));
     frame->setRightSoundTrackAt(i, tem);
+  }
+}
+
+void func_merage_complex(audio::s16PCMFrame *frame, audio::s16PCMFrame *frame_background)
+{
+  double frame_aver = 0;
+  double frame_background_aver = 0;
+  for(int i = 0; i < 1024; i++)
+  {
+    frame_aver += (abs(frame->getLeftSoundTrackAt(i)) + abs(frame->getRightSoundTrackAt(i))) / static_cast<double>(1024);
+    frame_background_aver += (abs(frame_background->getLeftSoundTrackAt(i)) + abs(frame_background->getRightSoundTrackAt(i))) / static_cast<double>(1024);
+  }
+
+  double adjust_coefficient;
+  if(fabs(frame_background_aver) < 1e-5)
+    return;
+  adjust_coefficient = frame_aver / frame_background_aver * 0.8;
+  if(fabs(frame_background_aver) < 1e-5)
+    adjust_coefficient = 1;
+  
+  for(int i = 0; i < 1024; i++)
+  {
+    frame_background->setLeftSoundTrackAt(i,static_cast<int16_t>(frame_background->getLeftSoundTrackAt(i) * adjust_coefficient));
+    frame_background->setRightSoundTrackAt(i,static_cast<int16_t>(frame_background->getRightSoundTrackAt(i) * adjust_coefficient));
+  }
+}
+
+void get_accompany(audio::s16PCMFrame *frame)
+{
+  double factor = 1;
+  for (int i = 0; i < 1024; i++) {
+    int32_t adjust;
+    int16_t left = frame->getLeftSoundTrackAt(i);
+    adjust = static_cast<int32_t>((frame->getLeftSoundTrackAt(i) -frame->getRightSoundTrackAt(i)) * factor);
+    if (adjust > INT16_MAX) {
+      factor = INT16_MAX / static_cast<double>(adjust);
+      adjust = INT16_MAX;
+    }
+    if (adjust < INT16_MIN) {
+      factor = INT16_MIN / static_cast<double>(adjust);
+      adjust = INT16_MIN;
+    }
+    frame->setLeftSoundTrackAt(i, static_cast<int16_t>(adjust));
+    if (factor < 1)
+      factor += (1 - factor) / static_cast<double>(8);
+    
+    adjust = static_cast<int32_t>((frame->getRightSoundTrackAt(i) - left) * factor);
+    if (adjust > INT16_MAX) {
+      factor = INT16_MAX / static_cast<double>(adjust);
+      adjust = INT16_MAX;
+    }
+    if (adjust < INT16_MIN) {
+      factor = INT16_MIN / static_cast<double>(adjust);
+      adjust = INT16_MIN;
+    }
+    frame->setRightSoundTrackAt(i, static_cast<int16_t>(adjust));
+    if (factor < 1)
+      factor += (1 - factor) / static_cast<double>(8);
   }
 }

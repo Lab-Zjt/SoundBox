@@ -15,4 +15,6 @@ void switch_lr(audio::s16PCMFrame *);
 [[gnu::unused]]void dumb(audio::s16PCMFrame *);
 void volume_adjust(audio::s16PCMFrame *frame, double left_adjust, double right_adjust);
 void sound_mix(audio::s16PCMFrame *frame, audio::s16PCMFrame *another_frame);
+void func_merage_complex(audio::s16PCMFrame *frame, audio::s16PCMFrame *frame_background);
+void get_accompany(audio::s16PCMFrame *frame);
 #endif

@@ -20,6 +20,7 @@ public:
   void Wait();
   void Depart();
   void Mix();
+  void Mix_background();
   void VolumeAdjust();
   int ReadInt();
   double ReadDouble();

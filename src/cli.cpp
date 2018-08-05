@@ -27,6 +27,7 @@ void CommandLineInterface::ShowHomePage() {
          "\t5. Mix 2 Music Files\n"
          "\t6. Volume Adjust\n"
          "\t7. Speed Up\n"
+         "\t8. Add background\n"
          "Please Enter Your Choice:");
 }
 void CommandLineInterface::Wait() {
@@ -79,6 +80,7 @@ void CommandLineInterface::SoundEffectsTransform() {
          "\t4. Block Right Sound Track\n"
          "\t5. Make Sound More Consecutive\n"
          "\t6. Switch Left and Right Sound Track.\n"
+         "\t7. Get accompany\n"
          "Please Enter Your Choice:");
   auto op = CommandLine.ReadInt();
   std::string input, output;
@@ -123,6 +125,12 @@ void CommandLineInterface::SoundEffectsTransform() {
     }
     case 6: {
       SoundEffectsTransform1(input, output, switch_lr);
+      printf("Press Enter to Continue.");
+      CommandLine.Wait();
+      break;
+    }
+    case 7:{
+      SoundEffectsTransform1(input, output, get_accompany);
       printf("Press Enter to Continue.");
       CommandLine.Wait();
       break;
@@ -189,6 +197,18 @@ void CommandLineInterface::Mix() {
   SoundMix(input1, input2, output);
   printf("Press Enter to Continue.\n");
   CommandLine.Wait();
+}void CommandLineInterface::Mix_background() {
+  CommandLine.Clean();
+  printf("Mix_background:\n"
+         "original File1:");
+  auto input1 = CommandLine.ReadString();
+  printf("background File2:");
+  auto input2 = CommandLine.ReadString();
+  printf("Output File:");
+  auto output = CommandLine.ReadString();
+  SoundMerge_Complex(input1, input2, output);
+  printf("Press Enter to Continue.\n");
+  CommandLine.Wait();
 }
 void CommandLineInterface::StartLoop() {
   while (true) {
@@ -221,6 +241,10 @@ void CommandLineInterface::StartLoop() {
       }
       case 7: {
         CommandLine.SoundSpeedUp();
+        break;
+      }
+      case 8:{
+        CommandLine.Mix_background();
         break;
       }
       default: {

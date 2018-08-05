@@ -84,6 +84,9 @@ namespace audio {
       }
       close(fd);
     }
+    void offset_zero(){
+      offset = 0;
+    }
     bool isEnd() {
       return offset >= filesize;
     }

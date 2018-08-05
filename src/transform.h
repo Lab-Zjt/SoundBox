@@ -11,4 +11,5 @@ void SoundDepart(const std::string &input, const std::string &left, const std::s
 void SoundMix(const std::string &input1, const std::string &input2, const std::string &output);
 void SoundVolumeAdjust(const std::string &input, const std::string &output, double la, double ra);
 void SoundSpeedUp(const std::string &input, const std::string &output, int rate);
+void SoundMerge_Complex(const std::string &input1, const std::string &input2, const std::string &output);
 #endif
