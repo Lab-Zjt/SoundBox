@@ -197,9 +197,7 @@ void CommandLineInterface::Mix() {
   SoundMix(input1, input2, output);
   printf("Press Enter to Continue.\n");
   CommandLine.Wait();
-}
-
-void CommandLineInterface::Mix_background() {
+}void CommandLineInterface::Mix_background() {
   CommandLine.Clean();
   printf("Mix_background:\n"
          "original File1:");
@@ -212,7 +210,6 @@ void CommandLineInterface::Mix_background() {
   printf("Press Enter to Continue.\n");
   CommandLine.Wait();
 }
-
 void CommandLineInterface::StartLoop() {
   while (true) {
     CommandLine.ShowHomePage();
