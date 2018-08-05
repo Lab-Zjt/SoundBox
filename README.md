@@ -31,6 +31,7 @@ make
 5. Mix 2 Music Files //混合两首音乐
 6. Volume Adjust //调整音量，调整因子仅支持0-1
 7. Speed Up //加速，同时升高音调（0-7，7为两倍速，提高八度）
+8. Get Accompany //加上背景音乐
 ```
 
 ### Sound Effects Transform
@@ -80,3 +81,7 @@ Time of End: 57.3
 ### Speed Up
 
 按提示依次输入`输入文件`、`输出文件`、`加速因子`。
+
+### Get Accompany
+
+按提示依次输入`输入文件`、`背景音乐文件`、`输出文件`。

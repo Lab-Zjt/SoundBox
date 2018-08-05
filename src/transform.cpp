@@ -228,7 +228,6 @@ void SoundSpeedUp(const std::string &input, const std::string &output, int rate)
   remove(tmp_file.c_str());
   cout << "Success!" << endl;
 }
-
 void SoundMerge_Complex(const std::string &input1, const std::string &input2, const std::string &output) {
   const string ffmpeg("ffmpeg -i ");
   const string tmp_file1("tmpweasdfw.wav");
@@ -247,14 +246,13 @@ void SoundMerge_Complex(const std::string &input1, const std::string &input2, co
   while (!reader.isEnd()) {
     auto frame = reader.readDataFrame16();
     
-    if(reader_background.isEnd())
-    {
+    if (reader_background.isEnd()) {
       reader_background.offset_zero();
       
     }
     auto frame_background = reader_background.readDataFrame16();
-    func_merage_complex(frame,frame_background);
-    sound_mix(frame,frame_background);
+    func_merage_complex(frame, frame_background);
+    sound_mix(frame, frame_background);
     reader.writeDataFrame16(frame);
     delete frame;
     delete frame_background;

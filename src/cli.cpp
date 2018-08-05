@@ -80,12 +80,12 @@ void CommandLineInterface::SoundEffectsTransform() {
          "\t4. Block Right Sound Track\n"
          "\t5. Make Sound More Consecutive\n"
          "\t6. Switch Left and Right Sound Track.\n"
-         "\t7. Get accompany\n"
+         "\t7. Get Accompany\n"
          "Please Enter Your Choice:");
   auto op = CommandLine.ReadInt();
   std::string input, output;
   
-  if (op > 0 && op < 7) {
+  if (op > 0 && op < 8) {
     printf("Input File:");
     input = CommandLine.ReadString();
     printf("Output File:");
@@ -129,7 +129,7 @@ void CommandLineInterface::SoundEffectsTransform() {
       CommandLine.Wait();
       break;
     }
-    case 7:{
+    case 7: {
       SoundEffectsTransform1(input, output, get_accompany);
       printf("Press Enter to Continue.");
       CommandLine.Wait();
@@ -197,12 +197,13 @@ void CommandLineInterface::Mix() {
   SoundMix(input1, input2, output);
   printf("Press Enter to Continue.\n");
   CommandLine.Wait();
-}void CommandLineInterface::Mix_background() {
+}
+void CommandLineInterface::Mix_background() {
   CommandLine.Clean();
   printf("Mix_background:\n"
-         "original File1:");
+         "Original File:");
   auto input1 = CommandLine.ReadString();
-  printf("background File2:");
+  printf("Background File:");
   auto input2 = CommandLine.ReadString();
   printf("Output File:");
   auto output = CommandLine.ReadString();
@@ -243,7 +244,7 @@ void CommandLineInterface::StartLoop() {
         CommandLine.SoundSpeedUp();
         break;
       }
-      case 8:{
+      case 8: {
         CommandLine.Mix_background();
         break;
       }
