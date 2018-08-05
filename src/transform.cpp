@@ -107,3 +107,43 @@ void SoundDepart(const std::string &input, const std::string &left, const std::s
   system(cmd.c_str());
   cout << "Success!" << endl;
 }
+
+
+void SoundMerge_Complex(const std::string &input1, const std::string &input2, const std::string &output) {
+  const string ffmpeg("ffmpeg -i ");
+  const string tmp_file1("tmpweasdfw.wav");
+  const string tmp_file2("tmpwaefwcd.wav");
+  fclose(stderr);
+  cout << "Decoding..." << endl;
+  auto cmd = ffmpeg + input1 + ' ' + tmp_file1;
+  system(cmd.c_str());
+  cmd = ffmpeg + input2 + ' ' + tmp_file2;
+  system(cmd.c_str());
+  cout << "Merging..." << endl;
+  audio::wavReader reader(tmp_file1.c_str());
+  reader.wavParse();
+  audio::wavReader reader_background(tmp_file2.c_str());
+  reader_background.wavParse();
+  while (!reader.isEnd()) {
+    auto frame = reader.readDataFrame16();
+    
+    if(reader_background.isEnd())
+    {
+      reader_background.offset_zero();
+      
+    }
+    auto frame_background = reader_background.readDataFrame16();
+    func_merage_complex(frame,frame_background);
+    sound_mix(frame,frame_background);
+    reader.writeDataFrame16(frame);
+    delete frame;
+    delete frame_background;
+  }
+  reader.writeToFile(tmp_file1.c_str());
+  cout << "Encoding..." << endl;
+  cmd = ffmpeg + tmp_file1 + ' ' + output;
+  system(cmd.c_str());
+  remove(tmp_file1.c_str());
+  remove(tmp_file2.c_str());
+  cout << "Success!" << endl;
+}
