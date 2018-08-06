@@ -31,7 +31,7 @@ make
 5. Mix 2 Music Files //混合两首音乐
 6. Volume Adjust //调整音量，调整因子仅支持0-1
 7. Speed Up //加速，同时升高音调（0-7，7为两倍速，提高八度）
-8. Get Accompany //加上背景音乐
+8. Add Background //加上背景音乐
 ```
 
 ### Sound Effects Transform
@@ -45,6 +45,7 @@ make
 4. Block Right Sound Track //屏蔽右声道
 5. Make Sound More Consecutive //使声音更平滑
 6. Switch Left and Right Sound Track //交换左右声道
+7. Get Accompany //消除/降低人声
 ```
 
 选择后依次输入`输入文件`、`输出文件`。

@@ -19,7 +19,7 @@ double CommandLineInterface::ReadDouble() {
 }
 void CommandLineInterface::ShowHomePage() {
   CommandLine.Clean();
-  printf("Welcome to Use WavParser!\n"
+  printf("Welcome to Use SoundBox!\n"
          "\t1. Sound Effects Transform\n"
          "\t2. Cut\n"
          "\t3. Merge\n"

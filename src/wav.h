@@ -84,7 +84,7 @@ namespace audio {
       }
       close(fd);
     }
-    void offset_zero(){
+    void offset_zero() {
       offset = 0;
     }
     bool isEnd() {
@@ -154,8 +154,8 @@ namespace audio {
     }
     void writeDataFrame16(s16PCMFrame *src) {
       std::uint64_t max_size = sizeof(s16PCMFrame) - sizeof(src->offset);
-      if (src->offset > filesize) {
-        max_size = max_size - (src->offset - filesize);
+      if (src->offset + max_size > filesize) {
+        max_size = filesize - src->offset;
       }
       memmove(data + src->offset, src, max_size);
     }
